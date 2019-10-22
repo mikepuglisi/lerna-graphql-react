@@ -1,0 +1,18 @@
+enum Role {
+  """Deprecated"""
+  AUTHENTICATED
+  """Unknown user. Not identified via ipaddress or login."""
+  ANONYMOUS
+  """User identified via ipaddress as being inhouse. Not identified via ipaddress or login."""
+  INHOUSE
+}
+
+type User {
+    #id: Int!
+    userName: String
+    #email: String!
+}
+
+extend type Query {
+    me: User!
+}

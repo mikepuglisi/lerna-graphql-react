@@ -1,13 +1,24 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Link from '@material-ui/core/Link';
-import ProTip from './ProTip';
+// import Container from '@material-ui/core/Container';
+// import Typography from '@material-ui/core/Typography';
+// import Box from '@material-ui/core/Box';
+// import Link from '@material-ui/core/Link';
+// import ProTip from './ProTip';
 import Dashboard from './Components/Dashboard';
-import Orders from './Components/Dashboard/Orders';
+// import Orders from './Components/Dashboard/Orders';
 // import Deposits from './Components/Dashboard/Deposits';
 import { Router } from "@reach/router";
+
+import { ApolloProvider } from "react-apollo";
+
+// import { Query } from "react-apollo";
+// import gql from "graphql-tag";
+
+import ApolloClient from "apollo-boost";
+
+const client = new ApolloClient({
+  uri: "/graphql"
+});
 
 // function Copyright() {
 //   return (
@@ -24,15 +35,13 @@ import { Router } from "@reach/router";
 
 const App = () => {
   return (
-    <Router>
-      <Dashboard path="/">
+    <ApolloProvider client={client}>
+      <Router>
+        <Dashboard path="/" />
+        <Dashboard path="/properties" />
+      </Router>
+    </ApolloProvider>
 
-        {/* <Report path=":reportId"/>
-        <Invoices path="invoices"/>
-        <Team path="team"/> */}
-      </Dashboard>
-
-    </Router>
   );
 }
 export default App;

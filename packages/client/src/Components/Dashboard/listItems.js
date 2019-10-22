@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef }  from 'react';
 import { Link } from '@reach/router'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -12,6 +12,11 @@ import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import HomeIcon from '@material-ui/icons/Home';
 
+
+const ForwardNavLink = forwardRef((props, ref) => (
+  <Link {...props} innerRef={ref} />
+));
+
 export const mainListItems = (
   <div>
     <ListItem button>
@@ -21,8 +26,7 @@ export const mainListItems = (
       <ListItemText primary="Dashboard" />
     </ListItem>
 
-      <ListItem component={props => <Link to="/properties" {...props}/>}
-            linkButton={true}>
+      <ListItem to="/properties" component={ForwardNavLink}>
         <ListItemIcon>
           <HomeIcon />
         </ListItemIcon>

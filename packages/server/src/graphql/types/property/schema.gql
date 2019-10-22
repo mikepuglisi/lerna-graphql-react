@@ -1,0 +1,9 @@
+type Property {
+  legacyId: String
+  parcelId: String
+  address: String
+}
+
+extend type Query {
+    properties: [Property]
+}

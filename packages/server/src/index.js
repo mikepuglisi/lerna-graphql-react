@@ -1,6 +1,16 @@
 import express from 'express';
 import { ApolloServer, gql } from 'apollo-server-express';
 import path from 'path';
+// import { knex } from './database'
+
+import {
+  typeDefs,
+  resolvers,
+  dataLoaders,
+  directives
+} from "./graphql";
+
+// console.log('knex', knex)
 
 const app = express();
 let port;
@@ -10,43 +20,52 @@ if (!process.env.PORT) {
     port = process.env.PORT
 }
 
-const books = [
-    {
-        title: 'Harry Potter and the Chamber of Secrets',
-        author: 'J.K. Rowling',
-    },
-    {
-        title: 'Jurassic Park',
-        author: 'Michael Crichton',
-    },
-];
+// const books = [
+//     {
+//         title: 'Harry Potter and the Chamber of Secrets',
+//         author: 'J.K. Rowling',
+//     },
+//     {
+//         title: 'Jurassic Park',
+//         author: 'Michael Crichton',
+//     },
+// ];
 
-const typeDefs = gql`
+// const typeDefs = gql`
 
-  type Book {
-    title: String
-    author: String
-  }
+//   type Book {
+//     title: String
+//     author: String
+//   }
 
-  type Query {
-    books: [Book]
-  }
-`;
+//   type Query {
+//     books: [Book]
+//   }
+// `;
 
-const resolvers = {
-    Query: {
-        books: () => books,
-    },
-};
+// const resolvers = {
+//     Query: {
+//         books: () => books,
+//     },
+// };
 
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    dataLoaders,
+    directives,
+    context: async args => {
+      return {
+        user: {
+          userName: "Mike"
+        }
+      }
+    }
 });
 
 server.applyMiddleware({ app })
 
-app.get('/hello', (req, res) => res.send('Hello World!'))
+// app.get('/hello', (req, res) => res.send('Hello World!'))
 
 
 // Serving react client

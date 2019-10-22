@@ -9,6 +9,7 @@
     "@reach/router": "^1.2.1",
     "apollo-boost": "^0.1.23",
     "graphql": "^14.0.2",
+    "material-table": "^1.52.0",
     "react": "^16.10.2",
     "react-apollo": "^2.3.3",
     "react-dom": "^16.10.2",
