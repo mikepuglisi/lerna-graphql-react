@@ -10,6 +10,10 @@ cd graphql-apollo-starter-kit
 yarn
 ```
 
+### Note
+
+May need to install via `yarn --network-timeout 500000` due to material-ui/icons
+
 ## Development Environment
 
 To spin up a local development server with hot reload, run:
@@ -17,6 +21,7 @@ To spin up a local development server with hot reload, run:
 ```
 yarn watch
 ```
+
 
 ## Deploy
 
@@ -32,6 +37,8 @@ PORT=8081 yarn serve
 Example (from root directory):
 
 yarn workspace client add @material-ui/core
+
+
 
 ## Based on
 

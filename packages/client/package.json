@@ -5,12 +5,15 @@
   "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^4.5.1",
+    "@material-ui/icons": "^4.5.1",
+    "@reach/router": "^1.2.1",
     "apollo-boost": "^0.1.23",
     "graphql": "^14.0.2",
     "react": "^16.10.2",
     "react-apollo": "^2.3.3",
     "react-dom": "^16.10.2",
-    "react-scripts": "^3.2.0"
+    "react-scripts": "^3.2.0",
+    "recharts": "^1.8.5"
   },
   "scripts": {
     "watch": "react-scripts start",
