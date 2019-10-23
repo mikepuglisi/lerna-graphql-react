@@ -18,9 +18,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
+import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import moment from 'moment';
 
 
 import MaterialTable from "material-table";
@@ -66,14 +68,39 @@ const tableIcons = {
 };
 
 
+/*
+where: {
+          landUseCodeDescription: "M-F < 10U",  saleDate_between:["1900-01-01", "2000-01-01"], salePrice_between: [101, 100000]
+          }, 
+          */
 
-
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 const PropertyTable = () => (
   <Query
     query={gql`
       {
-        properties {
-            address
+        propertiesConnection (first: 20, skip: 0) {
+          pageInfo {
+            endCursor
+          }
+          aggregate {
+            count    
+          }          
+          edges {
+            node {
+              owner1
+              legacyId
+              parcelId
+              saleDate
+              salePrice
+              location
+              locationCity
+              locationZip
+              landUseCodeDescription
+            }
+          }
         }
       }
     `}
@@ -82,36 +109,54 @@ const PropertyTable = () => (
       if (loading) return <p>Loading...</p>;
       if (error) return <p>Error :(</p>;
 
-      return <>{data.properties[0].address}
+      return <>
               <MaterialTable
+              options={{
+                pageSize: 20,
+                pageSizeOptions: [],
+         
+              }}
+              localization={{
+                toolbar: {
+                  
+                  searchPlaceholder: "Search Address Or Parcel"
+                
+                }  
+              }}
               icons={tableIcons}
           columns={[
-            { title: "Adı", field: "name" },
-            { title: "Soyadı", field: "surname" },
-            { title: "Doğum Yılı", field: "birthYear", type: "numeric" },
+            
+            { title: "Parcel", field: "parcelId",
+            render: rowData => <a href={`https://www.paslc.org/RECard/#/propCard/${rowData.legacyId}`} rel="noopener noreferrer" target="_blank">{rowData.parcelId}</a>
+            },
+            { title: "Land Use", field: "landUseCodeDescription" },
+            { title: "Owner", field: "owner1" },
+            { title: "Last Sale", field: "saleDate", render: rowData => moment(rowData.saleDate).format('YYYY-MM-DD') },
+            { title: "Last Price", field: "salePrice", type: "numeric" , render: rowData => numberWithCommas(rowData.salePrice)},
             {
-              title: "Doğum Yeri",
-              field: "birthCity",
-              lookup: { 34: "İstanbul", 63: "Şanlıurfa" }
+              title: "Location",
+              field: "location",
+              render: rowData => <a href={`https://www.google.com/maps/place/${rowData.location}+${rowData.locationCity}`} target="_blank" rel="noopener noreferrer">{rowData.location}</a>
+            },
+            {
+              title: "City",
+              field: "locationCity"
             }
           ]}
           // data={[
           //   { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 }
           // ]}
+
           data={query => {
             console.log("QUERY'", query)
+            console.log('data', data)
             return new Promise((resolve, reject) => {
                 // prepare your data and then call resolve like this:
+                const nodes = data.propertiesConnection.edges.map(edge => edge.node)
                 resolve({
-                    data: [
-                        { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 },
-                        { name: "Mehmet1", surname: "Baran", birthYear: 1987, birthCity: 63 },
-                        { name: "Mehmet2", surname: "Baran", birthYear: 1987, birthCity: 63 },
-                        { name: "Mehmet3", surname: "Baran", birthYear: 1987, birthCity: 63 },
-                        { name: "Mehmet4", surname: "Baran", birthYear: 1987, birthCity: 63 },
-                      ],
+                    data: nodes,
                     page: query.page,
-                    totalCount: 15
+                    totalCount: data.propertiesConnection.aggregate.count
                 });
             })
           }
@@ -119,7 +164,7 @@ const PropertyTable = () => (
           onChangePage={args => {
             console.log("ON CHANGE")
           }}
-          title="Demo Title"
+          title={`${numberWithCommas(data.propertiesConnection.aggregate.count)} Results`}
         />
       </>;
     }}
@@ -222,7 +267,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -246,7 +291,7 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
+            Property Search
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -275,28 +320,44 @@ export default function Dashboard() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
+        <CheckboxGroup
+          checkboxes={[
+        {
+          label: 'Shawshank Redemption',
+          value: 'shawshankRedemption',
+          checked: true,
+        },
+        {
+          label: 'The Godfather',
+          value: 'theGodfather',
+          checked: true,
+        },
+        {
+          label: 'The Dark Knight',
+          value: 'theDarkKnight',
+          checked: true,
+        },
+        {
+          label: 'Saving Private Ryan',
+          value: 'savingPrivateRyan',
+          checked: true,
+        },
+        {
+          label: 'Schindlers List',
+          value: 'schindlersList',
+          checked: true,
+        },
+      ]}
+          onCheckboxGroupChange={() => {}}
+        />          
           <PropertyTable />
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
-            </Grid>
-          </Grid>
         </Container>
+
+        {/* handleCheckboxgroupChange = (updatedUsecaseCBState) => {
+          this.setState({
+            checkboxes: updatedUsecaseCBState,
+          });
+        }; */}
 
       </main>
     </div>

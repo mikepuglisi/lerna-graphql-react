@@ -1,0 +1,1 @@
+psql -h localhost -p 54320 -U admin -d stlucie

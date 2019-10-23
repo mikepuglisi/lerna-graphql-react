@@ -1,9 +1,82 @@
 type Property {
+  id: Int
   legacyId: String
   parcelId: String
-  address: String
+  owner1: String
+  owner2: String
+  owner3: String
+  mailingAddress1: String
+  mailingAddress2: String
+  city: String
+  state: String
+  zipCode: String
+  country: String
+  landUseCode: String
+  landUseCodeDescription: String
+  totalArea: String
+  totalAreaUOM: String
+  districtGroup: String
+  districtGroupDescription: String
+  lot: String
+  section: String
+  township: String
+  range: String
+  grantor: String
+  grantee: String
+  saleLandUseCode: String
+  saleLandUseCodeDescription: String
+  salePrice: Float
+  saleDate: Date
+  location: String
+  locationCity: String
+  locationZip: String
+  legalShortDescription: String
+  notes: String    
+  jsonDoc: String 
 }
 
-extend type Query {
-    properties: [Property]
+extend type Query {    
+  propertiesConnection(where: PropertyWhereInput, skip: Int, first: Int): PropertyConnection
+  property(where: PropertyWhereUniqueInput): Property
+}
+
+type PropertyConnection {
+  pageInfo: PageInfo!
+  edges: [PropertyEdge]!
+  aggregate: AggregateProperty!
+}
+
+type PropertyEdge {
+  node: Property!
+  cursor: String!
+}
+
+type AggregateProperty {
+  count: Int!
+}
+
+
+input PropertyWhereInput {
+  landUseCode: String
+  landUseCodeDescription: String
+  salePrice_between: [Float]
+  saleDate_between: [Date]
+}
+
+input PropertyWhereUniqueInput {
+  id: Int
+  parcelId: String
+  # emailAddresses: PropertyEmailAddressWhereUniqueInput
+  # phoneNumbers: PropertyPhoneNumberWhereUniqueInput
+  # lastName: String
+}
+
+
+type PropertyLandUse {
+  code: String
+  description: String
+}
+
+extend type Query {      
+  propertyLandUses: [PropertyLandUse]
 }

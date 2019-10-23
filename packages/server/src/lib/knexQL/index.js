@@ -1,6 +1,7 @@
 /*
   # String filters
   text: String # matches all nodes with exact value
+  text_between: [Any, Any] # Uses first two values of array for a BETWEEN SQL statement.
   text_not: String # matches all nodes with different value
   text_in: [String!] # matches all nodes with value in the passed list
   text_not_in: [String!] # matches all nodes with value not in the passed list
@@ -56,6 +57,12 @@ const FILTERS = {
       return [column, value];
     }
   },
+  between: {
+    method: "whereBetween",
+    args: (column, value) => {      
+      return [column, value];
+    }
+  },  
   contains: {
     method: "where",
     args: (column, value) => [column, "like", `%${value}%`]

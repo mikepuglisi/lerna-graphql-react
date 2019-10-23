@@ -19,12 +19,12 @@ const ForwardNavLink = forwardRef((props, ref) => (
 
 export const mainListItems = (
   <div>
-    <ListItem button>
+    {/* <ListItem button>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
-    </ListItem>
+    </ListItem> */}
 
       <ListItem to="/properties" component={ForwardNavLink}>
         <ListItemIcon>

@@ -1,23 +1,28 @@
 //const {post: postModel} = require('../../db/models')
 // const db = require("../../../database");
 const { knex } = require("../../../database");
+const knexQL = require("../../../lib/knexQL")(knex);
+
 module.exports = {
 
   Query: {
-    properties: async (_, __, { dataLoaders, user }) => {
-      const properties = await knex('properties').select("*").map(record => {
-        return {
-          ...record,
-          ...record.jsonDoc
-        }
-      });
-      console.log('properties', properties)
+    propertiesConnection: async (_, args, { dataLoaders }) => {
+      const options = {};
+
+      const properties = await knexQL.connection('properties', args, options);
       return properties;
-      // const users = await db.getUsers();
-      // users.forEach(user => {
-      //   dataLoaders.user.prime(user.id, user);
-      // });
-      // return users;
     },
+    property: async (_, args, { dataLoaders }) => {
+      const property = await knexQL.resolve(knex("properties"), args).first();
+      return property;
+    }, 
+    propertyLandUses: async (_, args, { dataLoaders }) => {
+      const propertyLandUses = await knex('properties')
+      .select('landUseCode AS code', 'landUseCodeDescription AS description')
+      .groupBy('landUseCode', 'landUseCodeDescription')
+      .orderByRaw(`CASE WHEN "landUseCode" IN ('0800', '0100','0300') THEN '0' ELSE "landUseCode" END`)
+
+      return propertyLandUses;
+    },        
   }
 };

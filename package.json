@@ -2,9 +2,10 @@
   "name": "root",
   "scripts": {
     "build": "lerna run build --stream",
-    "knex": "cd ./packages/server && yarn knex",
-    "migrate": "cd ./packages/server && yarn knex migrate:latest",
-    "rollback": "cd ./packages/server && yarn knex migrate:rollback",
+    "knex": "cd ./packages/scraper && yarn knex",
+    "scrape": "cd ./packages/scraper && yarn start",
+    "migrate": "cd ./packages/scraper && yarn knex migrate:latest",
+    "rollback": "cd ./packages/scraper && yarn knex migrate:rollback",
     "watch": "concurrently --kill-others-on-fail \"cd ./packages/server && yarn watch\" \"cd ./packages/client && yarn watch\"",
     "serve": "cd packages/server && cross-env PORT=${PORT:-8080} yarn serve"
   },
