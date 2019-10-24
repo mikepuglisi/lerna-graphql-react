@@ -22,6 +22,7 @@ import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import SearchForm from './SearchForm';
 import moment from 'moment';
 
 
@@ -80,7 +81,7 @@ function numberWithCommas(x) {
 const PropertyTable = () => (
   <Query
     query={gql`
-      {
+      {      
         propertiesConnection (first: 20, skip: 0) {
           pageInfo {
             endCursor
@@ -320,6 +321,9 @@ export default function Dashboard() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
+        
+          <SearchForm />
+{/*         
         <CheckboxGroup
           checkboxes={[
         {
@@ -349,7 +353,7 @@ export default function Dashboard() {
         },
       ]}
           onCheckboxGroupChange={() => {}}
-        />          
+        />           */}
           <PropertyTable />
         </Container>
 
