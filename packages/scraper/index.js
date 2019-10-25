@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const { knex } = require('./database');
 const fs = require('fs');
 const fsp = fs.promises;
-
+const moment = require('moment')
 const csv=require('csvtojson')
 
 // const upsert = async (knexOrTableName, { where, update, create }) => {
@@ -27,9 +27,42 @@ const csv=require('csvtojson')
 //   });
 // };
 
+const getDate = (val) => {
+  try {
+    // console.log('val', `${val}`)
+    if (`${val}`.trim() === "") {      
+      return '1900-01-01'
+    }
+    return moment(val).format('YYYY-MM-DD')
+  } catch (e) {
+    return '1900-01-01'
+  }
+}
+
+const getPrice = (val) => {
+
+    // console.log('val', `${val}`)
+    if (`${val}`.trim() === "" || `${val}`.trim() === "TBD") {      
+      return '0'
+    }
+    return val
+
+}
+
+const formatValue = (key, val) => {
+  if (key === 'SaleDate') {
+     return getDate(val)
+  } else if (key === 'SalePrice') {
+    return getPrice(val)
+  }
+  return val
+}
+
 const normalizeKeysForDatabase = (obj) => {
   return Object.keys(obj).reduce((acc, key) => {
-    acc[key.charAt(0).toLowerCase() + key.replace(/ID/, "Id").slice(1)] = obj[key]
+    // const value = key === 'SaleDate' ? getDate(obj[key]) : obj[key]
+    const value = formatValue(key, obj[key])
+    acc[key.charAt(0).toLowerCase() + key.replace(/ID/, "Id").slice(1)] = value;
     return acc;
   }, {});
 }
@@ -97,6 +130,7 @@ async function main() {
     try {
       const recordToUpsert = normalizeKeysForDatabase(csvLine);
       recordToUpsert.legacyId = recordToUpsert.propertyId;
+      console.log('recordToUpsert.legacyId', recordToUpsert.legacyId)
       delete recordToUpsert.propertyId;
 
       // const recordToUpsert = {

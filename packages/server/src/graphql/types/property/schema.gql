@@ -57,6 +57,7 @@ type AggregateProperty {
 
 
 input PropertyWhereInput {
+  searchTerm: String
   landUseCode: String
   landUseCodeDescription: String
   salePrice_between: [Float]

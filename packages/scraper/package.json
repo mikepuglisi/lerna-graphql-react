@@ -1,5 +1,5 @@
 {
-  "name": "web-scraper-boilerplate",
+  "name": "scraper",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -14,8 +14,9 @@
     "bluebird": "^3.7.1",
     "csvtojson": "^2.0.10",
     "knex": "^0.19.5",
+    "moment": "^2.24.0",
     "pg": "^7.12.1",
-    "puppeteer": "^1.20.0"    
+    "puppeteer": "^1.20.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"
