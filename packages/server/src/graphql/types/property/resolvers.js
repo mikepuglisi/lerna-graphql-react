@@ -9,8 +9,10 @@ module.exports = {
     propertiesConnection: async (_, args, { dataLoaders }) => {
       const options = {};
       const knexObj = knex('properties')
-      const splitTerms = (args.where.searchTerm || '').split(' ')
-      if (args.where.searchTerm) {
+      const where = (args.where || {});
+      const splitTerms = (where.searchTerm || '').split(' ')
+      console.log("WHERE", where)
+      if (where.searchTerm) {
         splitTerms.forEach(splitTerm => {
           knexObj.orWhere('owner1', 'ilike', `%${splitTerm}%`);
           // knexObj.orWhere('owner2', 'ilike', `%${splitTerm}%`);

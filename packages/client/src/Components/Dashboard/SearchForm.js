@@ -13,6 +13,7 @@ import Chip from '@material-ui/core/Chip';
 import SearchBar from 'material-ui-search-bar'
 import NumberFormat from 'react-number-format';
 import TextField from '@material-ui/core/TextField';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 
 
@@ -85,7 +86,7 @@ const useStyles = makeStyles(theme => ({
           : theme.typography.fontWeightMedium,
     };
   }
-const SearchForm = () => {
+const SearchForm = ({onSubmit}) => {
     const classes = useStyles();
     const theme = useTheme();
 
@@ -98,12 +99,12 @@ const SearchForm = () => {
     //     setValues({ ...values, [prop]: event.target.value });
     //   };
       
-      const handleChange = name => event => {
+      const handleFieldChange = name => event => {
         setValues({
           ...values,
           [name]: event.target.value,
         });
-      };      
+     };      
     const [personName, setPersonName] = React.useState([]);
   
     const landUseChange = event => {
@@ -137,6 +138,70 @@ const SearchForm = () => {
       
   console.log('person', personName)
             return   <>    
+
+            <Formik
+      initialValues={{ searchTerm: '', landUseCode: [], minPrice: '' }}
+
+      onSubmit={(values, { setSubmitting }) => {
+        if (onSubmit) {
+          onSubmit(values);
+        }
+        setTimeout(() => {
+          alert(JSON.stringify(values, null, 2));
+          setSubmitting(false);
+        }, 400);
+      }}
+    >
+      {({         
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isSubmitting }) => (
+        <Form>
+        <div style={{display: "flex", justifyContent: "space-between", margin: '0 auto', maxWidth: 800}}>
+        <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="select-multiple">Land Use</InputLabel>
+        <Select
+          multiple
+          name="landUseCode"
+          value={values.landUseCode}
+          onChange={handleChange}
+          input={<Input id="select-multiple" />}
+
+          MenuProps={MenuProps}
+        >
+          {data.propertyLandUses.map(propertyLandUse => (
+            <MenuItem key={propertyLandUse.code} value={propertyLandUse} style={getStyles(propertyLandUse.code, personName, theme)}>
+              {propertyLandUse.description}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <TextField
+        className={classes.formControl}
+        label="Min Price"
+        name="minPrice"
+        value={values.minPrice}
+        onChange={handleChange}
+        id="formatted-numberformat-input"
+
+      />      
+      </div>      
+
+          <Field type="email" name="email"             onChange={handleChange}/>
+          <ErrorMessage name="email" component="div" />
+          <Field type="password" name="password" />
+          <ErrorMessage name="password" component="div" />
+          <button type="submit" disabled={isSubmitting}>
+            Submit
+          </button>
+        </Form>
+      )}
+    </Formik>
+              
             <SearchBar
             value={searchTerm}
             onChange={(value) => {
@@ -171,7 +236,7 @@ const SearchForm = () => {
         className={classes.formControl}
         label="Min Price"
         value={values.numberformat}
-        onChange={handleChange('numberformat')}
+        onChange={handleFieldChange('numberformat')}
         id="formatted-numberformat-input"
         InputProps={{
           inputComponent: NumberFormatCustom,
@@ -181,7 +246,7 @@ const SearchForm = () => {
         className={classes.formControl}
         label="Max Price"
         value={values.numberformat}
-        onChange={handleChange('numberformat')}
+        onChange={handleFieldChange('numberformat')}
         id="formatted-numberformat-input"
         InputProps={{
           inputComponent: NumberFormatCustom,

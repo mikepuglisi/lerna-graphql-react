@@ -15,7 +15,7 @@ import {
 const app = express();
 let port;
 if (!process.env.PORT) {
-    port = 4000;
+    port = 5000;
 } else {
     port = process.env.PORT
 }

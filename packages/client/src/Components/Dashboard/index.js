@@ -23,6 +23,7 @@ import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import SearchForm from './SearchForm';
+import SearchFormNew from '../SearchForm';
 import moment from 'moment';
 
 
@@ -321,8 +322,11 @@ export default function Dashboard() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-        
-          <SearchForm />
+          <SearchFormNew></SearchFormNew>
+          ===============
+          <SearchForm onSubmit={(values) => {
+            console.log("onSubmit", values);
+          }}/>
 {/*         
         <CheckboxGroup
           checkboxes={[
